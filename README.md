@@ -12,6 +12,10 @@ Instead of chunking code arbitrarily, Sublime embeds every line of code individu
 
 ## Quick Start
 
+```bash
+pip install pysublime
+```
+
 ```python
 from embedings import Embeddings
 
