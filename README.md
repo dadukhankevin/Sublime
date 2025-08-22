@@ -107,5 +107,5 @@ __pycache__
 ## Install
 
 ```bash
-pip install -r requirements.txt
+pip install pysublime
 ```
