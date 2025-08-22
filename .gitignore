@@ -39,6 +39,13 @@ Thumbs.db
 # Embeddings cache
 .embeddings/
 
+# Packaging (keep PyPI files out of Git)
+packaging/
+release/
+**/dist/
+**/build/
+**/*.egg-info/
+
 # Testing
 .pytest_cache/
 .coverage
