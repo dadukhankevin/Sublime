@@ -37,10 +37,6 @@ class Embeddings:
         return results
 
 
-
-
-# ---------------------------- Data structures ---------------------------- #
-
 @dataclass
 class CodeSection:
     """A section of code with context."""
@@ -56,8 +52,6 @@ class CodeSection:
         numbered = "\n".join(f"{i:4d}: {line}" for i, line in enumerate(self.lines, start=self.start_line))
         return header + numbered
 
-
-# ---------------------------- Embeddings indexer ---------------------------- #
 
 class EmbeddingsIndexer:
     """Manages line-by-line code embeddings with FAISS."""
@@ -116,7 +110,6 @@ class EmbeddingsIndexer:
                 return True
         return False
 
-    # ---------------- Persistence ---------------- #
 
     def _load_index(self) -> None:
         index_file = self.index_path / "faiss_index.bin"
@@ -145,7 +138,6 @@ class EmbeddingsIndexer:
             data = pickle.dumps(self.id_to_meta, protocol=pickle.HIGHEST_PROTOCOL)
             self._atomic_write(meta_file, data)
 
-    # ---------------- Build/Rebuild ---------------- #
 
     async def build_index(self) -> None:
         """Build the embeddings index for all project files from scratch."""
@@ -213,7 +205,6 @@ class EmbeddingsIndexer:
             files.append(p)
         return sorted(files)
 
-    # ---------------- Query ---------------- #
 
     def search(self, query: Optional[str] = None, negative_query: Optional[str] = None, limit: int = 1000) -> List[Tuple[int, float]]:
         """Return list of (doc_id, score) with optional negative prompting.
@@ -298,7 +289,6 @@ class EmbeddingsIndexer:
         return results
 
 
-# ---------------------------- Search & sectioning ---------------------------- #
 
 class EmbeddingsSearch:
     """Uses ML algorithms for time series segmentation of code hits."""
@@ -417,8 +407,6 @@ class EmbeddingsSearch:
         return CodeSection(file_path=file_path, start_line=start, end_line=end, lines=lines, avg_similarity=avg, max_similarity=max_score)
 
 
-# ---------------------------- File watching ---------------------------- #
-
 class FileWatcher:
     """Watches for file changes and triggers index updates."""
 
@@ -507,8 +495,7 @@ class FileChangeHandler(FileSystemEventHandler):
                 print(f"Error scheduling update for {file_path}: {e}")
 
 
-# ---------------------------- Suite wrapper ---------------------------- #
-# blue baboon lion tiger
+
 class EmbeddingsSuite:
     def __init__(self, project_path: str, supported_extensions: Optional[Set[str]] = None, ignore_file: Optional[str] = None, model: str = "all-MiniLM-L6-v2"):
         self.project_path = Path(project_path)
@@ -537,38 +524,6 @@ class EmbeddingsSuite:
         return {"total_files": total_files, "total_lines": total_lines, "index_size": index_size}
 
 
-# ---------------------------- CLI entrypoint ---------------------------- #
-
 if __name__ == "__main__":
-    import sys
-    import argparse
-    
-    parser = argparse.ArgumentParser(description="Search code using embeddings with optional negative prompting")
-    parser.add_argument("project_path", help="Path to the project directory")
-    parser.add_argument("query", nargs="?", help="Search query (optional if using --negative)")
-    parser.add_argument("--negative", "-n", help="Negative query to subtract from results")
-    parser.add_argument("--ignore-file", "-i", help="Path to ignore file (like .gitignore)")
-    parser.add_argument("--extensions", "-e", help="Comma-separated list of file extensions to include")
-    parser.add_argument("--top-n", "-t", type=int, default=20, help="Number of results to return")
-    parser.add_argument("--min-similarity", "-s", type=float, default=-1.0, help="Minimum similarity threshold")
-    
-    args = parser.parse_args()
-    
-    if not args.query and not args.negative:
-        parser.error("Must provide either query or --negative")
-    
-    extensions = None
-    if args.extensions:
-        extensions = set(ext.strip() for ext in args.extensions.split(','))
-        extensions = {ext if ext.startswith('.') else '.' + ext for ext in extensions}
-    
-    emb = Embeddings(args.project_path, extensions, args.ignore_file)
-    results = emb.search(args.query, args.negative, top_n=args.top_n, min_similarity=args.min_similarity)
-    
-    if not results:
-        print("No results found.")
-    else:
-        for i, result in enumerate(results, 1):
-            print(f"\n--- Result {i} (similarity: {result.max_similarity:.3f}) ---")
-            print(result)
+    print("This module is intended for use as a Python library. Import and use Embeddings/EmbeddingsSuite from your code.")
 

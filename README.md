@@ -34,14 +34,11 @@ for result in results:
     print(result)
 ```
 
-## Command Line
+## Usage Notes
 
-```bash
-python embedings.py ./project "error handling and exception management"
-python embedings.py ./project "user input validation" --negative "test cases and unit tests" 
-python embedings.py ./project --negative "well documented clean code"  # find technical debt
-python embedings.py ./project "API endpoint handlers" --extensions py,js --top-n 10
-```
+- Use from Python by importing `Embeddings`.
+- Control file types with `supported_extensions` and ignores with an `.embedignore` file.
+- `top_n` returns the best segments globally across all files.
 
 ## Configuration
 
